@@ -1,13 +1,8 @@
-#To Setup the script:
-#1. Setup SSH between Host and Monitoring
-#2. Setup Auto Discovery script
-#check current user by whoami
-#check sudo privileges by sudo -v
-#sed -i '/dont_blame_nrpe/c\dont_blame_nrpe=1' /usr/local/nagios/etc/nrpe.cfg
+#!/bin/bash
 
+#Install Plugins using source
 nagiosPlugin()
 {
-	#install Plugins
 	cd /tmp
 	wget https://nagios-plugins.org/download/nagios-plugins-2.2.1.tar.gz
 	tar xzf nagios-plugins-2.2.1.tar.gz
@@ -19,10 +14,9 @@ nagiosPlugin()
 	echo "Nagios Plugins installed"
 }
 
+#Install Nagios from Source
 nagiosInstall()
 {
-	#checking nagios user exist 
-	#cut -d: -f1 /etc/passwd | grep nagios
 	echo -n "Enter Password for nagios user: "
 	read -s password
 	echo
@@ -61,6 +55,7 @@ nagiosInstall()
 	echo "Please login to http://$monitoringIP/nagios"
 }
 
+#Installing NRPE Plugin
 nRPEPlugin()
 {
 	rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
@@ -88,6 +83,7 @@ EOF
 	service nagios restart
 }
 
+#Install NRPE Agent on Host machine through SSH
 nRPEAgent()
 {
 	echo "Enter IP of Host: "
@@ -149,12 +145,6 @@ pluginOnHost()
 	
 autoDiscovery()
 {
-	#yum install pip
-	#yum install python2-pip.noarch
-	#pip install boto
-	#add template
-	#change contact group in template or make ops contact group
-	#add check commands in file
 	cd /root/nagios-aws-autoconfig
 	python nagios_aws_autoconfig.py
 	cd /root/nagios-aws-autoconfig/nagios_config_dir/hosts
@@ -189,16 +179,10 @@ do
 		;;
 	6)	break
 		;;
-#	7)
-#		;;
-#	8)
-#		;;
 	*)	echo "Please enter a number between 1 and 6."
 		read
 		;;
  esac
- 
- 
 done
 clear
 echo "Thank you for using Nagios Installation and Configuration Script"
